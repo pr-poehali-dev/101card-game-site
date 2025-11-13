@@ -14,17 +14,40 @@ type Character = {
   image: string;
   hp: number;
   maxHp: number;
-  attack: number;
-  defense: number;
-  abilities: Ability[];
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  basicAttack: BasicAttack;
+  skill1: Skill;
+  skill2: Skill;
+  ultimate: Ultimate;
+  superCharge: number;
 };
 
-type Ability = {
+type BasicAttack = {
   name: string;
   damage: number;
-  type: 'physical' | 'magical' | 'special';
-  cooldown: number;
+  heal?: number;
+  superCharge: number;
+  description: string;
+};
+
+type Skill = {
+  name: string;
+  damage: number;
+  hits?: number;
+  heal?: number;
+  superCharge: number;
+  maxUses: number;
+  usesLeft: number;
+  description: string;
+  target: 'single' | 'all';
+};
+
+type Ultimate = {
+  name: string;
+  damage: number;
+  heal?: number;
+  description: string;
+  target: 'single' | 'all' | 'team';
 };
 
 type GameScreen = 'menu' | 'deck-builder' | 'battle' | 'inventory' | 'shop' | 'profile';
@@ -32,67 +55,46 @@ type GameScreen = 'menu' | 'deck-builder' | 'battle' | 'inventory' | 'shop' | 'p
 const CHARACTERS: Character[] = [
   {
     id: 1,
-    name: 'Железный Страж',
-    class: 'Воин',
-    image: 'https://cdn.poehali.dev/projects/1fc2d0aa-fa1e-46d3-814d-192517e13540/files/8b4ac01a-399e-4083-957f-490cc4123d5f.jpg',
-    hp: 120,
-    maxHp: 120,
-    attack: 45,
-    defense: 60,
+    name: 'БШ',
+    class: 'Дебаффер',
+    image: 'https://cdn.poehali.dev/projects/1fc2d0aa-fa1e-46d3-814d-192517e13540/files/3b7a2908-fcd3-4470-9860-da109f5bb92e.jpg',
+    hp: 95,
+    maxHp: 95,
     rarity: 'legendary',
-    abilities: [
-      { name: 'Удар щитом', damage: 30, type: 'physical', cooldown: 0 },
-      { name: 'Защитная стойка', damage: 0, type: 'special', cooldown: 2 },
-      { name: 'Сокрушающий удар', damage: 60, type: 'physical', cooldown: 3 }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Огненный Маг',
-    class: 'Маг',
-    image: 'https://cdn.poehali.dev/projects/1fc2d0aa-fa1e-46d3-814d-192517e13540/files/d6896e57-3235-48db-8800-1eacf6dd23c1.jpg',
-    hp: 80,
-    maxHp: 80,
-    attack: 70,
-    defense: 30,
-    rarity: 'epic',
-    abilities: [
-      { name: 'Огненный шар', damage: 50, type: 'magical', cooldown: 0 },
-      { name: 'Метеоритный дождь', damage: 80, type: 'magical', cooldown: 4 },
-      { name: 'Огненная стена', damage: 0, type: 'special', cooldown: 3 }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Лесной Охотник',
-    class: 'Лучник',
-    image: 'https://cdn.poehali.dev/projects/1fc2d0aa-fa1e-46d3-814d-192517e13540/files/dbfa89d5-fc14-4705-bad2-c39e0a31af79.jpg',
-    hp: 90,
-    maxHp: 90,
-    attack: 55,
-    defense: 40,
-    rarity: 'rare',
-    abilities: [
-      { name: 'Точный выстрел', damage: 40, type: 'physical', cooldown: 0 },
-      { name: 'Залп стрел', damage: 65, type: 'physical', cooldown: 3 },
-      { name: 'Ловушка', damage: 20, type: 'special', cooldown: 2 }
-    ]
-  },
-  {
-    id: 4,
-    name: 'Теневой Ассасин',
-    class: 'Убийца',
-    image: 'https://cdn.poehali.dev/projects/1fc2d0aa-fa1e-46d3-814d-192517e13540/files/8b4ac01a-399e-4083-957f-490cc4123d5f.jpg',
-    hp: 70,
-    maxHp: 70,
-    attack: 65,
-    defense: 35,
-    rarity: 'epic',
-    abilities: [
-      { name: 'Удар из тени', damage: 55, type: 'physical', cooldown: 0 },
-      { name: 'Яд', damage: 45, type: 'special', cooldown: 2 },
-      { name: 'Критический удар', damage: 90, type: 'physical', cooldown: 4 }
-    ]
+    superCharge: 0,
+    basicAttack: {
+      name: 'Лозы природы',
+      damage: 25,
+      heal: 10,
+      superCharge: 15,
+      description: 'Призывает лозы, которые связывают врага (25 урона) и исцеляют БШ (10 HP)'
+    },
+    skill1: {
+      name: 'Дух крокодила',
+      damage: 45,
+      superCharge: 20,
+      maxUses: 2,
+      usesLeft: 2,
+      description: 'Призывает духа крокодила, наносящего 45 урона',
+      target: 'single'
+    },
+    skill2: {
+      name: 'Дух лошади',
+      damage: 5,
+      hits: 6,
+      superCharge: 0,
+      maxUses: 1,
+      usesLeft: 1,
+      description: 'Лошадь топчется, нанося 5 урона 6 раз (всего 30)',
+      target: 'single'
+    },
+    ultimate: {
+      name: 'Гнев природы',
+      damage: 25,
+      heal: 10,
+      description: 'Лозы исцеляют всю команду на 10 HP и наносят 25 урона всем врагам',
+      target: 'all'
+    }
   }
 ];
 
@@ -101,7 +103,7 @@ export default function Index() {
   const [playerDeck, setPlayerDeck] = useState<Character[]>([]);
   const [playerName, setPlayerName] = useState('Герой');
   const [favoriteCharacter, setFavoriteCharacter] = useState<number | null>(null);
-  const [ownedCharacters, setOwnedCharacters] = useState<number[]>([1, 2]);
+  const [ownedCharacters, setOwnedCharacters] = useState<number[]>([1]);
   const [gold, setGold] = useState(500);
   const [battleLog, setBattleLog] = useState<string[]>([]);
 
@@ -172,7 +174,7 @@ export default function Index() {
     </div>
   );
 
-  const CharacterCard = ({ character, showAbilities = false, onClick, isSelected = false }: any) => (
+  const CharacterCard = ({ character, showAbilities = false, onClick, isSelected = false, inBattle = false }: any) => (
     <Card 
       className={`card-shine cursor-pointer transition-all duration-300 hover:scale-105 overflow-hidden ${
         isSelected ? 'ring-2 ring-primary glow-primary' : ''
@@ -202,29 +204,52 @@ export default function Index() {
           <Progress value={(character.hp / character.maxHp) * 100} className="h-2" />
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="flex items-center gap-1">
-            <Icon name="Sword" size={16} className="text-primary" />
-            <span>Атака: {character.attack}</span>
+        {inBattle && (
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs flex items-center gap-1">
+                <Icon name="Sparkles" size={14} className="text-accent" />
+                Ультимейт
+              </span>
+              <span className="text-xs font-bold">{Math.round(character.superCharge)}%</span>
+            </div>
+            <Progress value={character.superCharge} className="h-1.5 bg-muted" />
           </div>
-          <div className="flex items-center gap-1">
-            <Icon name="Shield" size={16} className="text-blue-500" />
-            <span>Защита: {character.defense}</span>
-          </div>
-        </div>
+        )}
 
         {showAbilities && (
-          <div className="space-y-2 pt-2 border-t border-border">
-            <p className="text-xs font-semibold text-muted-foreground">УМЕНИЯ:</p>
-            {character.abilities.map((ability: Ability, idx: number) => (
-              <div key={idx} className="text-xs flex items-center justify-between">
-                <span className="flex items-center gap-1">
-                  <Icon name="Zap" size={12} className="text-accent" />
-                  {ability.name}
-                </span>
-                <span className="text-gold">{ability.damage}</span>
-              </div>
-            ))}
+          <div className="space-y-3 pt-2 border-t border-border">
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                <Icon name="Swords" size={12} />
+                БАЗОВАЯ АТАКА:
+              </p>
+              <p className="text-xs text-muted-foreground">{character.basicAttack.description}</p>
+            </div>
+            
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-blue-400 flex items-center gap-1">
+                <Icon name="Zap" size={12} />
+                {character.skill1.name} ({character.skill1.usesLeft}/{character.skill1.maxUses})
+              </p>
+              <p className="text-xs text-muted-foreground">{character.skill1.description}</p>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-purple-400 flex items-center gap-1">
+                <Icon name="Zap" size={12} />
+                {character.skill2.name} ({character.skill2.usesLeft}/{character.skill2.maxUses})
+              </p>
+              <p className="text-xs text-muted-foreground">{character.skill2.description}</p>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs font-semibold text-gold flex items-center gap-1">
+                <Icon name="Sparkles" size={12} />
+                УЛЬТИМЕЙТ: {character.ultimate.name}
+              </p>
+              <p className="text-xs text-muted-foreground">{character.ultimate.description}</p>
+            </div>
           </div>
         )}
       </div>
@@ -316,29 +341,128 @@ export default function Index() {
 
   const BattleScreen = () => {
     const [enemyDeck, setEnemyDeck] = useState<Character[]>(
-      CHARACTERS.slice(0, 4).map(c => ({ ...c, hp: c.maxHp }))
+      CHARACTERS.slice(0, 1).map(c => ({ 
+        ...c, 
+        hp: c.maxHp,
+        superCharge: 0,
+        skill1: { ...c.skill1, usesLeft: c.skill1.maxUses },
+        skill2: { ...c.skill2, usesLeft: c.skill2.maxUses }
+      }))
+    );
+    const [battlePlayerDeck, setBattlePlayerDeck] = useState<Character[]>(
+      playerDeck.map(c => ({ 
+        ...c, 
+        superCharge: 0,
+        skill1: { ...c.skill1, usesLeft: c.skill1.maxUses },
+        skill2: { ...c.skill2, usesLeft: c.skill2.maxUses }
+      }))
     );
     const [currentPlayerChar, setCurrentPlayerChar] = useState(0);
     const [currentEnemyChar, setCurrentEnemyChar] = useState(0);
 
-    const attack = (ability: Ability) => {
-      const newEnemyDeck = [...enemyDeck];
-      const enemy = newEnemyDeck[currentEnemyChar];
-      
-      enemy.hp = Math.max(0, enemy.hp - ability.damage);
-      setEnemyDeck(newEnemyDeck);
-      
-      const newLog = [
-        `${playerDeck[currentPlayerChar].name} использует ${ability.name}! Урон: ${ability.damage}`,
-        ...battleLog
-      ].slice(0, 10);
-      setBattleLog(newLog);
+    const addLog = (message: string) => {
+      setBattleLog(prev => [message, ...prev].slice(0, 15));
+    };
 
-      if (enemy.hp === 0) {
-        setBattleLog([`${enemy.name} повержен!`, ...newLog]);
-        if (currentEnemyChar < 3) {
-          setTimeout(() => setCurrentEnemyChar(currentEnemyChar + 1), 1000);
+    const useBasicAttack = () => {
+      const attacker = battlePlayerDeck[currentPlayerChar];
+      const target = enemyDeck[currentEnemyChar];
+      
+      const newEnemyDeck = [...enemyDeck];
+      newEnemyDeck[currentEnemyChar].hp = Math.max(0, target.hp - attacker.basicAttack.damage);
+      setEnemyDeck(newEnemyDeck);
+
+      const newPlayerDeck = [...battlePlayerDeck];
+      if (attacker.basicAttack.heal) {
+        newPlayerDeck[currentPlayerChar].hp = Math.min(
+          attacker.maxHp,
+          attacker.hp + attacker.basicAttack.heal
+        );
+      }
+      newPlayerDeck[currentPlayerChar].superCharge = Math.min(
+        100,
+        attacker.superCharge + attacker.basicAttack.superCharge
+      );
+      setBattlePlayerDeck(newPlayerDeck);
+
+      addLog(`${attacker.name}: ${attacker.basicAttack.name} - ${attacker.basicAttack.damage} урона${attacker.basicAttack.heal ? `, +${attacker.basicAttack.heal} HP` : ''}`);
+
+      if (newEnemyDeck[currentEnemyChar].hp === 0) {
+        addLog(`${target.name} повержен!`);
+      }
+    };
+
+    const useSkill1 = () => {
+      const attacker = battlePlayerDeck[currentPlayerChar];
+      if (attacker.skill1.usesLeft <= 0) return;
+
+      const target = enemyDeck[currentEnemyChar];
+      const newEnemyDeck = [...enemyDeck];
+      newEnemyDeck[currentEnemyChar].hp = Math.max(0, target.hp - attacker.skill1.damage);
+      setEnemyDeck(newEnemyDeck);
+
+      const newPlayerDeck = [...battlePlayerDeck];
+      newPlayerDeck[currentPlayerChar].skill1.usesLeft -= 1;
+      newPlayerDeck[currentPlayerChar].superCharge = Math.min(
+        100,
+        attacker.superCharge + attacker.skill1.superCharge
+      );
+      setBattlePlayerDeck(newPlayerDeck);
+
+      addLog(`${attacker.name}: ${attacker.skill1.name} - ${attacker.skill1.damage} урона (${attacker.skill1.usesLeft - 1}/${attacker.skill1.maxUses} осталось)`);
+
+      if (newEnemyDeck[currentEnemyChar].hp === 0) {
+        addLog(`${target.name} повержен!`);
+      }
+    };
+
+    const useSkill2 = () => {
+      const attacker = battlePlayerDeck[currentPlayerChar];
+      if (attacker.skill2.usesLeft <= 0) return;
+
+      const target = enemyDeck[currentEnemyChar];
+      const totalDamage = attacker.skill2.damage * (attacker.skill2.hits || 1);
+      
+      const newEnemyDeck = [...enemyDeck];
+      newEnemyDeck[currentEnemyChar].hp = Math.max(0, target.hp - totalDamage);
+      setEnemyDeck(newEnemyDeck);
+
+      const newPlayerDeck = [...battlePlayerDeck];
+      newPlayerDeck[currentPlayerChar].skill2.usesLeft -= 1;
+      newPlayerDeck[currentPlayerChar].superCharge = Math.min(
+        100,
+        attacker.superCharge + attacker.skill2.superCharge
+      );
+      setBattlePlayerDeck(newPlayerDeck);
+
+      addLog(`${attacker.name}: ${attacker.skill2.name} - ${attacker.skill2.hits}x${attacker.skill2.damage} = ${totalDamage} урона (${attacker.skill2.usesLeft - 1}/${attacker.skill2.maxUses})`);
+
+      if (newEnemyDeck[currentEnemyChar].hp === 0) {
+        addLog(`${target.name} повержен!`);
+      }
+    };
+
+    const useUltimate = () => {
+      const attacker = battlePlayerDeck[currentPlayerChar];
+      if (attacker.superCharge < 100) return;
+
+      if (attacker.ultimate.target === 'all') {
+        const newEnemyDeck = enemyDeck.map(enemy => ({
+          ...enemy,
+          hp: Math.max(0, enemy.hp - attacker.ultimate.damage)
+        }));
+        setEnemyDeck(newEnemyDeck);
+
+        if (attacker.ultimate.heal) {
+          const newPlayerDeck = battlePlayerDeck.map(char => ({
+            ...char,
+            hp: Math.min(char.maxHp, char.hp + (attacker.ultimate.heal || 0))
+          }));
+          newPlayerDeck[currentPlayerChar].superCharge = 0;
+          setBattlePlayerDeck(newPlayerDeck);
         }
+
+        addLog(`${attacker.name}: ${attacker.ultimate.name} - ${attacker.ultimate.damage} урона всем врагам${attacker.ultimate.heal ? `, команда +${attacker.ultimate.heal} HP` : ''}!`);
       }
     };
 
@@ -375,32 +499,66 @@ export default function Index() {
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold text-primary">Ваша команда</h3>
                 <div className="grid grid-cols-4 gap-4">
-                  {playerDeck.map((char, idx) => (
+                  {battlePlayerDeck.map((char, idx) => (
                     <CharacterCard 
                       key={char.id}
                       character={char}
                       isSelected={idx === currentPlayerChar}
+                      inBattle
                     />
                   ))}
                 </div>
               </div>
 
               <Card className="p-6 bg-card/50">
-                <h3 className="text-lg font-semibold mb-4">Умения персонажа</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  {playerDeck[currentPlayerChar]?.abilities.map((ability, idx) => (
-                    <Button
-                      key={idx}
-                      size="lg"
-                      onClick={() => attack(ability)}
-                      className="flex-col h-auto py-4 space-y-2"
-                      variant={ability.type === 'special' ? 'secondary' : 'default'}
-                    >
-                      <Icon name="Zap" size={24} />
-                      <span className="font-bold">{ability.name}</span>
-                      <span className="text-gold text-sm">{ability.damage} урона</span>
-                    </Button>
-                  ))}
+                <h3 className="text-lg font-semibold mb-4">Умения {battlePlayerDeck[currentPlayerChar]?.name}</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button
+                    size="lg"
+                    onClick={useBasicAttack}
+                    className="flex-col h-auto py-4 space-y-2 bg-gradient-to-br from-green-600 to-green-700 hover:from-green-500 hover:to-green-600"
+                  >
+                    <Icon name="Leaf" size={24} />
+                    <span className="font-bold">{battlePlayerDeck[currentPlayerChar]?.basicAttack.name}</span>
+                    <span className="text-xs text-center">{battlePlayerDeck[currentPlayerChar]?.basicAttack.description}</span>
+                    <span className="text-gold text-sm">+{battlePlayerDeck[currentPlayerChar]?.basicAttack.superCharge}% заряд</span>
+                  </Button>
+
+                  <Button
+                    size="lg"
+                    onClick={useSkill1}
+                    disabled={battlePlayerDeck[currentPlayerChar]?.skill1.usesLeft === 0}
+                    className="flex-col h-auto py-4 space-y-2 bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 disabled:opacity-50"
+                  >
+                    <Icon name="Turtle" size={24} />
+                    <span className="font-bold">{battlePlayerDeck[currentPlayerChar]?.skill1.name}</span>
+                    <span className="text-xs">({battlePlayerDeck[currentPlayerChar]?.skill1.usesLeft}/{battlePlayerDeck[currentPlayerChar]?.skill1.maxUses})</span>
+                    <span className="text-gold text-sm">{battlePlayerDeck[currentPlayerChar]?.skill1.damage} урона</span>
+                  </Button>
+
+                  <Button
+                    size="lg"
+                    onClick={useSkill2}
+                    disabled={battlePlayerDeck[currentPlayerChar]?.skill2.usesLeft === 0}
+                    className="flex-col h-auto py-4 space-y-2 bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 disabled:opacity-50"
+                  >
+                    <Icon name="Rabbit" size={24} />
+                    <span className="font-bold">{battlePlayerDeck[currentPlayerChar]?.skill2.name}</span>
+                    <span className="text-xs">({battlePlayerDeck[currentPlayerChar]?.skill2.usesLeft}/{battlePlayerDeck[currentPlayerChar]?.skill2.maxUses})</span>
+                    <span className="text-gold text-sm">{battlePlayerDeck[currentPlayerChar]?.skill2.hits}x{battlePlayerDeck[currentPlayerChar]?.skill2.damage} урона</span>
+                  </Button>
+
+                  <Button
+                    size="lg"
+                    onClick={useUltimate}
+                    disabled={battlePlayerDeck[currentPlayerChar]?.superCharge < 100}
+                    className="flex-col h-auto py-4 space-y-2 bg-gradient-to-br from-gold to-orange-600 hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50"
+                  >
+                    <Icon name="Sparkles" size={24} />
+                    <span className="font-bold">{battlePlayerDeck[currentPlayerChar]?.ultimate.name}</span>
+                    <span className="text-xs text-center">{Math.round(battlePlayerDeck[currentPlayerChar]?.superCharge || 0)}%</span>
+                    <span className="text-white text-sm">УЛЬТИМЕЙТ</span>
+                  </Button>
                 </div>
               </Card>
             </div>
